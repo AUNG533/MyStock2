@@ -1,3 +1,4 @@
+// app.dart
 import 'package:flutter/material.dart';
 import 'package:my_stock/src/pages/home.dart';
 

@@ -5,5 +5,3 @@ import 'package:my_stock/src/app.dart';
 void main() {
   runApp(const App());
 }
-
-
