@@ -2,6 +2,7 @@
 // login_page.dart
 import 'package:flutter/material.dart';
 import 'package:my_stock/src/config/theme.dart' as custom_theme;
+import 'package:my_stock/src/pages/login/widgets/header.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -20,7 +21,7 @@ class LoginPage extends StatelessWidget {
           ),
           Column(
             children: [
-              Text('header', style: TextStyle(color: Colors.white)),
+              Header(), // เรียกใช Widget จาก lib/src/pages/login/widgets/header.dart
               Text('form', style: TextStyle(color: Colors.white)),
               Text('forgot password', style: TextStyle(color: Colors.white)),
               Text('SSO', style: TextStyle(color: Colors.white)),
@@ -32,3 +33,5 @@ class LoginPage extends StatelessWidget {
     );
   }
 }
+
+

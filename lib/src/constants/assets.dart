@@ -3,4 +3,5 @@
 class Assets {
   static const String baseIMAGE = 'assets/images';
   static const String logoIMAGE = '$baseIMAGE/logo.png';
+  static const String headerIMAGE = '$baseIMAGE/header.png';
 }
