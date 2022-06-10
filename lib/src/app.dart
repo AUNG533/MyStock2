@@ -1,6 +1,6 @@
 // app.dart
 import 'package:flutter/material.dart';
-import 'package:my_stock/src/pages/home.dart';
+import 'package:my_stock/src/pages/login/login_page.dart';
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
@@ -12,7 +12,7 @@ class App extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomePage(title: 'MyStock'),
+      home: const LoginPage(),
     );
   }
 }
