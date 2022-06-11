@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, prefer_function_declarations_over_variables
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, prefer_function_declarations_over_variables, deprecated_member_use
 // login_form.dart
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -10,6 +10,7 @@ class LoginForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stack(
+      alignment: Alignment.bottomCenter, // ให้ Widget อยู่ ล่างกลาง
       children: [
         _buildForm(),
         _buildSubmitFormButton(),
@@ -24,7 +25,7 @@ class LoginForm extends StatelessWidget {
             borderRadius: BorderRadius.circular(8.0) // โคงมุง
             ),
         child: Padding(
-          padding: const EdgeInsets.all(22.0),
+          padding: const EdgeInsets.only(top: 20, bottom: 58, left: 28, right: 28),
           child: FormInput(),
         ),
       );
@@ -33,6 +34,20 @@ class LoginForm extends StatelessWidget {
         width: 220,
         height: 50,
         decoration: _boxDecoration(),
+        // Login Event Button
+        child: FlatButton(
+          onPressed: () {
+            // todo
+          },
+          child: Text(
+            'LOGIN',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 25.0,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
       );
 
   BoxDecoration _boxDecoration() {
