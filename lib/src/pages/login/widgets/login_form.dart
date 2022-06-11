@@ -4,8 +4,34 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_stock/src/config/theme.dart' as custom_theme;
 
-class LoginForm extends StatelessWidget {
+// convert to stateful widget
+class LoginForm extends StatefulWidget {
   const LoginForm({Key? key}) : super(key: key);
+
+  @override
+  State<LoginForm> createState() => _LoginFormState();
+}
+
+class _LoginFormState extends State<LoginForm> {
+  // สำหรับ รับค่า จาก FormInput (Map กับ controller FormInput)
+  TextEditingController? usernameController;
+  TextEditingController? passwordController;
+
+  // เช็คสทาณะ
+  @override
+  void initState() {
+    usernameController = TextEditingController();
+    passwordController = TextEditingController();
+    super.initState();
+  }
+
+  // ทิ่ง เมื่อเสร็จ
+  @override
+  void dispose() {
+    usernameController?.dispose();
+    passwordController?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +51,13 @@ class LoginForm extends StatelessWidget {
             borderRadius: BorderRadius.circular(8.0) // โคงมุง
             ),
         child: Padding(
-          padding: const EdgeInsets.only(top: 20, bottom: 58, left: 28, right: 28),
-          child: FormInput(),
+          padding:
+              const EdgeInsets.only(top: 20, bottom: 58, left: 28, right: 28),
+          child: FormInput(
+            // รับค่า username และ password พ่าน controller จาก TextField ใน Class FormInput
+            usernameController: usernameController,
+            passwordController: passwordController,
+          ),
         ),
       );
 
@@ -37,7 +68,9 @@ class LoginForm extends StatelessWidget {
         // Login Event Button
         child: FlatButton(
           onPressed: () {
-            // todo
+            // ลอง print ดู
+            print(usernameController?.text);
+            print(passwordController?.text);
           },
           child: Text(
             'LOGIN',
@@ -80,10 +113,24 @@ class LoginForm extends StatelessWidget {
   }
 }
 
-class FormInput extends StatelessWidget {
-  final _color = Colors.black54; // ตัวแปรสี
+// convert to StatefulWidget
+class FormInput extends StatefulWidget {
+  // สำหรับส่งค่า และ required ไป LoginForm
+  final TextEditingController? usernameController;
+  final TextEditingController? passwordController;
 
-  const FormInput({Key? key}) : super(key: key);
+  const FormInput(
+      {Key? key,
+      required this.usernameController,
+      required this.passwordController})
+      : super(key: key);
+
+  @override
+  State<FormInput> createState() => _FormInputState();
+}
+
+class _FormInputState extends State<FormInput> {
+  final _color = Colors.black54;
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +141,7 @@ class FormInput extends StatelessWidget {
         Divider(
           height: 22, // ความสุงรวม (บน + ล่าง)
           thickness: 1, // ความหนา
-          indent: 13, // แบงขาง ควา
+          indent: 13, // แบงขาง ขวา
           endIndent: 13, // แบงขาง ซาย
         ),
         _buildPassword(), // function return TextField
@@ -106,38 +153,35 @@ class FormInput extends StatelessWidget {
   TextStyle _textStyle() =>
       TextStyle(fontWeight: FontWeight.w500, color: _color);
 
-  TextField _buildUsername() {
-    return TextField(
-      // ตกแตงด้วย decoration
-      decoration: InputDecoration(
-        border: InputBorder.none,
-        // ไม่มีเส้นแบง
-        labelText: 'Email Address',
-        labelStyle: _textStyle(),
-        hintText: 'example@gmail.com',
-        icon: FaIcon(
-          FontAwesomeIcons.envelope,
-          size: 22.0,
-          color: _color,
+  TextField _buildUsername() => TextField(
+        controller: widget.usernameController, // ส่งค่าออก
+        // ตกแตงด้วย decoration
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          labelText: 'Email Address',
+          labelStyle: _textStyle(),
+          hintText: 'example@gmail.com',
+          icon: FaIcon(
+            FontAwesomeIcons.envelope,
+            size: 22.0,
+            color: _color,
+          ),
         ),
-      ),
-    );
-  }
+      );
 
-  TextField _buildPassword() {
-    return TextField(
-      // ตกแตงด้วย decoration
-      decoration: InputDecoration(
-        border: InputBorder.none, // ไม่มีเส้นแบง
-        labelText: 'Password',
-        labelStyle: _textStyle(),
-        icon: FaIcon(
-          FontAwesomeIcons.lock,
-          size: 22.0,
-          color: _color,
+  TextField _buildPassword() => TextField(
+        controller: widget.passwordController, // ส่งค่าออก
+        // ตกแตงด้วย decoration
+        decoration: InputDecoration(
+          border: InputBorder.none, // ไม่มีเส้นแบง
+          labelText: 'Password',
+          labelStyle: _textStyle(),
+          icon: FaIcon(
+            FontAwesomeIcons.lock,
+            size: 22.0,
+            color: _color,
+          ),
         ),
-      ),
-      obscureText: true, // ซ่อมตัวนังสือ ให้เป็น ....
-    );
-  }
+        obscureText: true, // ซ่อมตัวนังสือ ให้เป็น ....
+      );
 }
