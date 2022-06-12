@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_stock/src/config/theme.dart' as custom_theme;
+import 'package:my_stock/src/utils/regex_validator.dart';
 
 // convert to stateful widget
 class LoginForm extends StatefulWidget {
@@ -16,6 +17,9 @@ class _LoginFormState extends State<LoginForm> {
   // สำหรับ รับค่า จาก FormInput (Map กับ controller FormInput)
   TextEditingController? usernameController;
   TextEditingController? passwordController;
+  // สำหรับ รับค่า error จาก FormInput
+  String? _errorUsername;
+  String? _errorPassword;
 
   // เช็คสทาณะ
   @override
@@ -57,6 +61,9 @@ class _LoginFormState extends State<LoginForm> {
             // รับค่า username และ password พ่าน controller จาก TextField ใน Class FormInput
             usernameController: usernameController,
             passwordController: passwordController,
+            // รับค่า error username และ password จาก FormInput
+            errorUsername: _errorUsername,
+            errorPassword: _errorPassword,
           ),
         ),
       );
@@ -68,9 +75,26 @@ class _LoginFormState extends State<LoginForm> {
         // Login Event Button
         child: FlatButton(
           onPressed: () {
-            // ลอง print ดู
-            print(usernameController?.text);
-            print(passwordController?.text);
+            // รับ และ เก็บ ค่าจาก FormInput
+            String username = usernameController!.text;
+            String password = passwordController!.text;
+            // Clear Error Message
+            _errorUsername = null;
+            _errorPassword = null;
+            // Check Username
+            if (!EmailSubmitRegexValidator().isValid(username)) {
+              _errorUsername = 'The Email must be a valid email email.';
+            }
+            // Check Password
+            if (password.length < 8) {
+              _errorPassword = 'Mute be at least 8 characters.';
+            }
+            // ถ้าไม่มีข้อผิดพลาด
+            if (_errorUsername == null && _errorPassword == null) {
+              setState(() {});
+            } else {
+              setState(() {});
+            }
           },
           child: Text(
             'LOGIN',
@@ -86,7 +110,7 @@ class _LoginFormState extends State<LoginForm> {
   BoxDecoration _boxDecoration() {
     const gradientStart = custom_theme.Theme.gradientStart; // ตัวแปรสี
     const gradientEnd = custom_theme.Theme.gradientEnd; // ตัวแปรสี
-    // function BoxShadow // เงา รอบนนก
+    // function BoxShadow // เงา รอบนอก
     final boxShadowItem = (Color color) => BoxShadow(
           color: color,
           offset: Offset(1.0, 6.0), // x , y
@@ -115,15 +139,20 @@ class _LoginFormState extends State<LoginForm> {
 
 // convert to StatefulWidget
 class FormInput extends StatefulWidget {
-  // สำหรับส่งค่า และ required ไป LoginForm
+  // สำหรับ ส่งค่า username และ password จาก TextField ไป class LoginForm
   final TextEditingController? usernameController;
   final TextEditingController? passwordController;
+  // สำหรับ ส่งค่า error ไป class LoginForm
+  final String? errorUsername;
+  final String? errorPassword;
 
-  const FormInput(
-      {Key? key,
-      required this.usernameController,
-      required this.passwordController})
-      : super(key: key);
+  const FormInput({
+    Key? key,
+    required this.usernameController,
+    required this.passwordController,
+    required this.errorUsername,
+    required this.errorPassword,
+  }) : super(key: key);
 
   @override
   State<FormInput> createState() => _FormInputState();
@@ -166,6 +195,7 @@ class _FormInputState extends State<FormInput> {
             size: 22.0,
             color: _color,
           ),
+          errorText: widget.errorUsername, // ส่งค่า / แสดง error
         ),
       );
 
@@ -173,7 +203,8 @@ class _FormInputState extends State<FormInput> {
         controller: widget.passwordController, // ส่งค่าออก
         // ตกแตงด้วย decoration
         decoration: InputDecoration(
-          border: InputBorder.none, // ไม่มีเส้นแบง
+          border: InputBorder.none,
+          // ไม่มีเส้นแบง
           labelText: 'Password',
           labelStyle: _textStyle(),
           icon: FaIcon(
@@ -181,6 +212,7 @@ class _FormInputState extends State<FormInput> {
             size: 22.0,
             color: _color,
           ),
+          errorText: widget.errorPassword, // ส่งค่า / แสดง error
         ),
         obscureText: true, // ซ่อมตัวนังสือ ให้เป็น ....
       );
