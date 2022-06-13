@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, prefer_function_declarations_over_variables, deprecated_member_use
 // login_form.dart
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_stock/src/config/theme.dart' as custom_theme;
@@ -17,6 +18,7 @@ class _LoginFormState extends State<LoginForm> {
   // สำหรับ รับค่า จาก FormInput (Map กับ controller FormInput)
   TextEditingController? usernameController;
   TextEditingController? passwordController;
+
   // สำหรับ รับค่า error จาก FormInput
   String? _errorUsername;
   String? _errorPassword;
@@ -91,7 +93,16 @@ class _LoginFormState extends State<LoginForm> {
             }
             // ถ้าไม่มีข้อผิดพลาด
             if (_errorUsername == null && _errorPassword == null) {
-              setState(() {});
+              showLoadingBar();
+              Future.delayed(Duration(seconds: 2)).then((value) {
+                Navigator.pop(context);
+                if (username == 'example@gmail.com' && password == '12345678') {
+                  print('login success');
+                } else {
+                  showAlertBar();
+                }
+                setState(() {});
+              });
             } else {
               setState(() {});
             }
@@ -135,6 +146,30 @@ class _LoginFormState extends State<LoginForm> {
       ),
     );
   }
+
+  void showAlertBar() {
+    Flushbar(
+      title: "Username or Password is incorrect",
+      message: 'Please try again.',
+      icon: Icon(
+        Icons.error,
+        size: 28.0,
+        color: Colors.red,
+      ),
+      duration: Duration(seconds: 3),
+      margin: EdgeInsets.all(8),
+      borderRadius: BorderRadius.circular(8),
+    ).show(context);
+  }
+
+  void showLoadingBar() {
+    Flushbar(
+      message: 'Please wait.',
+      showProgressIndicator: true,
+      flushbarPosition: FlushbarPosition.TOP,
+      flushbarStyle: FlushbarStyle.GROUNDED,
+    ).show(context);
+  }
 }
 
 // convert to StatefulWidget
@@ -142,6 +177,7 @@ class FormInput extends StatefulWidget {
   // สำหรับ ส่งค่า username และ password จาก TextField ไป class LoginForm
   final TextEditingController? usernameController;
   final TextEditingController? passwordController;
+
   // สำหรับ ส่งค่า error ไป class LoginForm
   final String? errorUsername;
   final String? errorPassword;
