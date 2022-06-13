@@ -201,9 +201,10 @@ class FormInput extends StatefulWidget {
 class _FormInputState extends State<FormInput> {
   final _color = Colors.black54;
 
-  bool? _obscureTextPassword;
-  FocusNode? _passwordFocusNode;
+  bool? _obscureTextPassword; // สำหรับ ซ่อม หรือ แสดง รหัสผ่าน
+  FocusNode? _passwordFocusNode; // สำหรับ Focus ไปที่ TextField รหัสผ่าน
 
+  // เช็คสถานะ
   @override
   initState() {
     _obscureTextPassword = true;
