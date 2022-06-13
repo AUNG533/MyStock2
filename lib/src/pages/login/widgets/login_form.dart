@@ -70,43 +70,14 @@ class _LoginFormState extends State<LoginForm> {
         ),
       );
 
+  // Container LoginButton
   Container _buildSubmitFormButton() => Container(
         width: 220,
         height: 50,
         decoration: _boxDecoration(),
-        // Login Event Button
+        // Login Button
         child: FlatButton(
-          onPressed: () {
-            // รับ และ เก็บ ค่าจาก FormInput
-            String username = usernameController!.text;
-            String password = passwordController!.text;
-            // Clear Error Message
-            _errorUsername = null;
-            _errorPassword = null;
-            // Check Username
-            if (!EmailSubmitRegexValidator().isValid(username)) {
-              _errorUsername = 'The Email must be a valid email email.';
-            }
-            // Check Password
-            if (password.length < 8) {
-              _errorPassword = 'Mute be at least 8 characters.';
-            }
-            // ถ้าไม่มีข้อผิดพลาด
-            if (_errorUsername == null && _errorPassword == null) {
-              showLoadingBar();
-              Future.delayed(Duration(seconds: 2)).then((value) {
-                Navigator.pop(context);
-                if (username == 'example@gmail.com' && password == '12345678') {
-                  print('login success');
-                } else {
-                  showAlertBar();
-                }
-                setState(() {});
-              });
-            } else {
-              setState(() {});
-            }
-          },
+          onPressed: _onLogin, // กดปุ่ม Login
           child: Text(
             'LOGIN',
             style: TextStyle(
@@ -170,9 +141,42 @@ class _LoginFormState extends State<LoginForm> {
       flushbarStyle: FlushbarStyle.GROUNDED,
     ).show(context);
   }
+
+  // กดปุ่ม Login
+  void _onLogin() {
+    // รับ และ เก็บ ค่าจาก FormInput
+    String username = usernameController!.text;
+    String password = passwordController!.text;
+    // Clear Error Message
+    _errorUsername = null;
+    _errorPassword = null;
+    // Check Username
+    if (!EmailSubmitRegexValidator().isValid(username)) {
+      _errorUsername = 'The Email must be a valid email email.';
+    }
+    // Check Password
+    if (password.length < 8) {
+      _errorPassword = 'Mute be at least 8 characters.';
+    }
+    // ถ้าไม่มีข้อผิดพลาด
+    if (_errorUsername == null && _errorPassword == null) {
+      showLoadingBar();
+      Future.delayed(Duration(seconds: 2)).then((value) {
+        Navigator.pop(context);
+        if (username == 'example@gmail.com' && password == '12345678') {
+          print('login success');
+        } else {
+          showAlertBar();
+          setState(() {});
+        }
+        setState(() {});
+      });
+    } else {
+      setState(() {});
+    }
+  }
 }
 
-// convert to StatefulWidget
 class FormInput extends StatefulWidget {
   // สำหรับ ส่งค่า username และ password จาก TextField ไป class LoginForm
   final TextEditingController? usernameController;
@@ -197,6 +201,15 @@ class FormInput extends StatefulWidget {
 class _FormInputState extends State<FormInput> {
   final _color = Colors.black54;
 
+  bool? _obscureTextPassword;
+  FocusNode? _passwordFocusNode;
+
+  @override
+  initState() {
+    _obscureTextPassword = true;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -219,7 +232,8 @@ class _FormInputState extends State<FormInput> {
       TextStyle(fontWeight: FontWeight.w500, color: _color);
 
   TextField _buildUsername() => TextField(
-        controller: widget.usernameController, // ส่งค่าออก
+        controller: widget.usernameController,
+        // ส่งค่าออก
         // ตกแตงด้วย decoration
         decoration: InputDecoration(
           border: InputBorder.none,
@@ -233,14 +247,21 @@ class _FormInputState extends State<FormInput> {
           ),
           errorText: widget.errorUsername, // ส่งค่า / แสดง error
         ),
+        // layout ของ keyboard
+        keyboardType: TextInputType.emailAddress,
+        textInputAction: TextInputAction.next,
+        // กด enter เพื่อ focus ไปที่ password
+        onSubmitted: (String value) {
+          FocusScope.of(context).requestFocus(_passwordFocusNode);
+        },
       );
 
   TextField _buildPassword() => TextField(
         controller: widget.passwordController, // ส่งค่าออก
         // ตกแตงด้วย decoration
         decoration: InputDecoration(
-          border: InputBorder.none,
           // ไม่มีเส้นแบง
+          border: InputBorder.none,
           labelText: 'Password',
           labelStyle: _textStyle(),
           icon: FaIcon(
@@ -248,8 +269,24 @@ class _FormInputState extends State<FormInput> {
             size: 22.0,
             color: _color,
           ),
-          errorText: widget.errorPassword, // ส่งค่า / แสดง error
+          // ส่งค่า / แสดง error
+          errorText: widget.errorPassword,
+          // ปุ่ม แสดงรหัสผ่าน
+          suffixIcon: IconButton(
+            icon: Icon(
+              _obscureTextPassword!
+                  ? FontAwesomeIcons.eye
+                  : FontAwesomeIcons.eyeSlash,
+              size: 15.0,
+              color: _color,
+            ),
+            onPressed: () {
+              setState(() {
+                _obscureTextPassword = !_obscureTextPassword!;
+              });
+            },
+          ),
         ),
-        obscureText: true, // ซ่อมตัวนังสือ ให้เป็น ....
+        obscureText: _obscureTextPassword!, // ซ่อมตัวนังสือ ให้เป็น ....
       );
 }
