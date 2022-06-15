@@ -1,7 +1,5 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 // login_page.dart
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:my_stock/src/config/theme.dart' as custom_theme;
 import 'package:my_stock/src/pages/login/widgets/header.dart';

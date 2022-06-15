@@ -4,6 +4,7 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_stock/src/config/theme.dart' as custom_theme;
+import 'package:my_stock/src/pages/home.dart';
 import 'package:my_stock/src/utils/regex_validator.dart';
 
 // convert to stateful widget
@@ -164,7 +165,13 @@ class _LoginFormState extends State<LoginForm> {
       Future.delayed(Duration(seconds: 2)).then((value) {
         Navigator.pop(context);
         if (username == 'example@gmail.com' && password == '12345678') {
-          print('login success');
+          // เปิดไปหน้า HomePage และ ทับ/ลบ หน้า login พร้อมส่งค่า ไปที่ HomePage
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomePage(name: 'HongSar', age: 30),
+            ),
+          );
         } else {
           showAlertBar();
           setState(() {});
