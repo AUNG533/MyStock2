@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, prefer_function_declarations_over_variables, deprecated_member_use
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, prefer_function_declarations_over_variables, deprecated_member_use, use_build_context_synchronously
 // login_form.dart
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +6,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_stock/src/config/theme.dart' as custom_theme;
 import 'package:my_stock/src/utils/regex_validator.dart';
 import 'package:my_stock/src/config/route.dart' as custom_route;
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../constants/setting.dart';
 
 // convert to stateful widget
 class LoginForm extends StatefulWidget {
@@ -162,12 +165,15 @@ class _LoginFormState extends State<LoginForm> {
     // ถ้าไม่มีข้อผิดพลาด
     if (_errorUsername == null && _errorPassword == null) {
       showLoadingBar();
-      Future.delayed(Duration(seconds: 2)).then((value) {
+      Future.delayed(Duration(seconds: 2)).then((value) async {
         Navigator.pop(context);
         if (username == 'example@gmail.com' && password == '12345678') {
-          // เปิดหน้า HomePage โด้ย เรียกใช้ เส้นทาง จาก routes.dart ที่ import มา
-          Navigator.pushReplacementNamed(context, custom_route.Route.home,
-              arguments: {'name': 'HongSar', 'age': 30});
+
+          final prefs = await SharedPreferences.getInstance();
+          prefs.setString(Setting.tokenPref, 'adldieldieldofjappkoasfjie'); // เก็บค่า token
+          prefs.setString(Setting.usernamePref, username); // เก็บค่า username
+
+          Navigator.pushReplacementNamed(context, custom_route.Route.home);
         } else {
           showAlertBar();
           setState(() {});

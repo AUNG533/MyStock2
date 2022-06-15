@@ -1,12 +1,12 @@
 // home_page.dart
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:my_stock/src/constants/assets.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key, required this.name, required this.age}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
-  final String name;
-  final int age;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -28,9 +28,7 @@ class _HomePageState extends State<HomePage> {
             if (Navigator.canPop(context)) {
               Navigator.pop(context); // กลับหน้าก่อนหน้า
             }
-          }, child: Text('back')),
-          Text(widget.name), // แสดงค่าที่ส่งมาจาก login_form.dart
-          Text(widget.age.toString()), // แสดงค่าที่ส่งมาจาก login_form.dart
+          }, child: const Text('back')),
           // Asset Image
           Image.asset(Assets.logoIMAGE),
           // Network Image
