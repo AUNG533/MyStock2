@@ -1,11 +1,10 @@
-// home.dart
+// home_page.dart
 import 'package:flutter/material.dart';
 import 'package:my_stock/src/constants/assets.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, required this.name, required this.age}) : super(key: key);
 
-  // สำหับ ส่ง required และรับค่ากลับมา
   final String name;
   final int age;
 
@@ -14,6 +13,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  // static Object? argument = ModalRoute.of(context)!.settings.arguments;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
