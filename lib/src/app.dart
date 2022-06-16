@@ -16,7 +16,6 @@ class App extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-
       home: FutureBuilder<SharedPreferences>(
           future: SharedPreferences.getInstance(), // รับค่า SharedPreferences
           builder: (context, snapshot) {
