@@ -1,8 +1,11 @@
 // custom_drawer.dart
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_stock/src/config/route.dart' as custom_route;
 import 'package:my_stock/src/constants/setting.dart';
+import 'package:my_stock/src/viewmodels/menu_view_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // convert to StatefulWidget
@@ -19,6 +22,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
     return Drawer(
       child: Column(
         children: [
+          _buildProfile(),
+          ..._buildMainMenu(), // List Menu ListTile
           const Spacer(), // ดัน widget ให้อยู่ด้านล่าง
           // ListTile Logout
           ListTile(
@@ -77,4 +82,35 @@ class _CustomDrawerState extends State<CustomDrawer> {
       },
     );
   }
+
+  UserAccountsDrawerHeader _buildProfile() => UserAccountsDrawerHeader(
+        // decoration: BoxDecoration(color: Colors.red),
+        accountName: Text('John Doe'),
+        accountEmail: Text('hongsar@gmail.com'),
+        currentAccountPicture: CircleAvatar(
+          backgroundImage: NetworkImage(
+              'https://cdn-images-1.medium.com/max/280/1*X5PBTDQQ2Csztg3a6wofIQ@2x.png'),
+        ),
+      );
+
+  // สำหรับการสร้าง ListTile ของ menu
+  List<ListTile> _buildMainMenu() => MenuViewModel().items.map((item) {
+        return ListTile(
+          leading: FaIcon(
+            item.icon,
+            color: item.iconColor,
+          ),
+          title: Text(
+            item.title!,
+            style: TextStyle(
+              fontSize: 18.0,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          onTap: () {
+            // Navigator.of(context).pop(); // ปิด drawer
+            item.onTap!(context);
+          },
+        );
+      }).toList();
 }
