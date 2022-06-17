@@ -1,6 +1,7 @@
 // custom_drawer.dart
 // ignore_for_file: prefer_const_constructors
 
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_stock/src/config/route.dart' as custom_route;
@@ -83,10 +84,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
     );
   }
 
+  // สร้างหน้าบนสุดของ Drawer
   UserAccountsDrawerHeader _buildProfile() => UserAccountsDrawerHeader(
-        // decoration: BoxDecoration(color: Colors.red),
+        // decoration: BoxDecoration(color: Colors.red), // กำหนดสีพื้นหลัง
         accountName: Text('John Doe'),
         accountEmail: Text('hongsar@gmail.com'),
+        // รูป Header ของ Drawer
         currentAccountPicture: CircleAvatar(
           backgroundImage: NetworkImage(
               'https://cdn-images-1.medium.com/max/280/1*X5PBTDQQ2Csztg3a6wofIQ@2x.png'),
@@ -96,9 +99,19 @@ class _CustomDrawerState extends State<CustomDrawer> {
   // สำหรับการสร้าง ListTile ของ menu
   List<ListTile> _buildMainMenu() => MenuViewModel().items.map((item) {
         return ListTile(
-          leading: FaIcon(
-            item.icon,
-            color: item.iconColor,
+          leading: Badge(
+            showBadge: item.icon == FontAwesomeIcons.inbox,
+            badgeContent: Text(
+              '99',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+              ),
+            ),
+            child: FaIcon(
+              item.icon,
+              color: item.iconColor,
+            ),
           ),
           title: Text(
             item.title!,
