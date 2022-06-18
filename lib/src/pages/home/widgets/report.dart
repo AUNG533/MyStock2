@@ -1,3 +1,4 @@
+// report.dart
 import 'package:flutter/material.dart';
 
 class Report extends StatelessWidget {
@@ -8,6 +9,7 @@ class Report extends StatelessWidget {
     return const Center(
       child: FlutterLogo(
         style: FlutterLogoStyle.stacked,
+        size: 450,
       ),
     );
   }

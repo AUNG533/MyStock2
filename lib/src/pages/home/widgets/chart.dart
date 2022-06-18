@@ -1,5 +1,5 @@
 // ignore_for_file: prefer_const_constructors
-
+// chart.dart
 import 'package:flutter/material.dart';
 
 class Chart extends StatelessWidget {
@@ -9,7 +9,7 @@ class Chart extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: FlutterLogo(
-        style: FlutterLogoStyle.horizontal,
+        style: FlutterLogoStyle.horizontal, size: 450,
       ),
     );
   }

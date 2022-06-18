@@ -1,22 +1,33 @@
+// custom_tabbar.dart
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:my_stock/src/viewmodels/tabbar_view_model.dart';
 
 class CustomTabBar extends StatelessWidget implements PreferredSizeWidget {
-  const CustomTabBar({Key? key}) : super(key: key);
+
+  final List<TabMenu> tabMenu; // List of tab menu
+
+  const CustomTabBar(this.tabMenu, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const TabBar(
-      tabs: [
-        Tab(
-          child: Text('Stock'),
-        ),
-        Tab(
-          child: Text('Chart'),
-        ),
-        Tab(
-          child: Text('Report'),
-        ),
-      ],
+    return TabBar(
+      tabs: tabMenu
+          .map(
+            (item) => Tab(
+              child: Row(
+                children: [
+                  FaIcon(item.icon),
+                  const SizedBox(width: 12), // Space between icon and text
+                  Text(
+                    item.title,
+                    style: const TextStyle(fontSize: 18, color: Colors.white),
+                  ),
+                ],
+              ),
+            ),
+          )
+          .toList(),
     );
   }
 

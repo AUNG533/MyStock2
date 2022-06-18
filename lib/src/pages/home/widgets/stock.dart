@@ -1,3 +1,4 @@
+// stock.dart
 import 'package:flutter/material.dart';
 
 class Stock extends StatelessWidget {
@@ -6,7 +7,9 @@ class Stock extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Center(
-      child: FlutterLogo(),
+      child: FlutterLogo(
+        size: 450,
+      ),
     );
   }
 }
