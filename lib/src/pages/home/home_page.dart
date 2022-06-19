@@ -24,7 +24,7 @@ class _HomePageState extends State<HomePage> {
         appBar: _buildAppBar(), // Method to build app bar
         drawer: const CustomDrawer(), // Drawer
         body: TabBarView(
-          children: _tabMenu.map((item) => item.widget!).toList(), 
+          children: _tabMenu.map((item) => item.widget!).toList(),
         ),
       ),
     );
