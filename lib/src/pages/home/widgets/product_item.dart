@@ -1,9 +1,9 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
-
-// ignore_for_file: prefer_const_literals_to_create_immutables
+// product_item.dart
 
 import 'package:flutter/material.dart';
 import 'package:my_stock/src/utils/format.dart';
+import 'package:my_stock/src/widgets/image_not_found.dart';
 
 class ProductItem extends StatelessWidget {
   // อัตาราส่วน LayoutBuilder - constraints.maxHeight / ส่งค่ามาจากฟังก์ชันของคลาส Stock
@@ -31,16 +31,19 @@ class ProductItem extends StatelessWidget {
 
   Stack _buildImage() {
     final height = maxHeight * 0.7; // ความสูงของรูปภาพ
+    final stock = 10; // จำลอง จำนวนสินค้า แต่ละรายการ
     const productImage =
         'https://cdn-images-1.medium.com/max/280/1*X5PBTDQQ2Csztg3a6wofIQ@2x.png';
     return Stack(
       children: [
-        Image.network(
-          productImage,
-          height: height,
+        SizedBox(
           width: double.infinity,
+          height: height,
+          child: productImage != null && productImage.isNotEmpty // ถ้ามีรูปภาพ
+              ? Image.network(productImage) // แสดงรูปภาพ
+              : ImageNotFound(), // ถ้าไม่มีรูปภาพ
         ),
-        _buildOutOfStock(), // แสดงข้อความ Out of Stock
+        if (stock <= 0) _buildOutOfStock(), // ถ้าสินค้าหมด
       ],
     );
   }
@@ -92,8 +95,7 @@ class ProductItem extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
             child: Text(
               'Out of Stock',
-              style: TextStyle(
-                  fontWeight: FontWeight.bold, fontSize: 12),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
             ),
           ),
         ),
