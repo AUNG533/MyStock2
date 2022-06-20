@@ -3,6 +3,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:my_stock/src/utils/format.dart';
 
 class ProductItem extends StatelessWidget {
   // อัตาราส่วน LayoutBuilder - constraints.maxHeight / ส่งค่ามาจากฟังก์ชันของคลาส Stock
@@ -12,24 +13,35 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: Column(
-        children: [
-          _buildImage(), // แสดงรูปภาพ
-          _buildInfo(), // แสดงข้อมูลสินค้า
-        ],
+    return GestureDetector(
+      onTap: () {
+        print('ProductItem');
+      },
+      child: Container(
+        color: Colors.white,
+        child: Column(
+          children: [
+            _buildImage(), // แสดงรูปภาพ
+            _buildInfo(), // แสดงข้อมูลสินค้า
+          ],
+        ),
       ),
     );
   }
 
-  Image _buildImage() {
+  Stack _buildImage() {
     final height = maxHeight * 0.7; // ความสูงของรูปภาพ
     const productImage =
         'https://cdn-images-1.medium.com/max/280/1*X5PBTDQQ2Csztg3a6wofIQ@2x.png';
-    return Image.network(
-      productImage,
-      height: height,
+    return Stack(
+      children: [
+        Image.network(
+          productImage,
+          height: height,
+          width: double.infinity,
+        ),
+        _buildOutOfStock(), // แสดงข้อความ Out of Stock
+      ],
     );
   }
 
@@ -39,6 +51,7 @@ class ProductItem extends StatelessWidget {
           child: Column(
             // จัดตำแหน่งข้อมูล ให้อยู่สุด 2 ด้าน
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 'Contrary to popular belief, Lorem Ipsum is not simply random text.',
@@ -50,11 +63,38 @@ class ProductItem extends StatelessWidget {
                 // จัดตำแหน่งข้อมูล ให้อยู่สุด 2 ด้าน
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('\$11111'), // ราคาสินค้า
-                  Text('33333'), // จำนวนสินค้า
+                  Text(
+                    '฿${formatCurrency.format(111)}',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ), // ราคาสินค้า
+                  Text(
+                    '${formatNumber.format(999)} pieces',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.deepOrangeAccent,
+                    ),
+                  ), // จำนวนสินค้า
                 ],
               )
             ],
+          ),
+        ),
+      );
+
+  Positioned _buildOutOfStock() => Positioned(
+        top: 2,
+        right: 2,
+        child: Card(
+          color: Colors.amber,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+            child: Text(
+              'Out of Stock',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold, fontSize: 12),
+            ),
           ),
         ),
       );
