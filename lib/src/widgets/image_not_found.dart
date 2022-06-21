@@ -12,7 +12,7 @@ class ImageNotFound extends StatelessWidget {
       children: const [
         Icon(
           Icons.image_not_supported,
-          color: Colors.black,
+          color: Colors.black54,
           size: 50,
         ),
         SizedBox(height: 8),
