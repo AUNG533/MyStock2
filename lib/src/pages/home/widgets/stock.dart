@@ -1,9 +1,10 @@
 // stock.dart
 import 'package:flutter/material.dart';
-import 'package:my_stock/src/models/post.dart';
+import 'package:my_stock/src/models/product.dart';
 import 'package:my_stock/src/pages/home/widgets/product_item.dart';
 import 'package:my_stock/src/service/network_service.dart';
 
+// convert StatelessWidget to StatefulWidget
 class Stock extends StatefulWidget {
   const Stock({Key? key}) : super(key: key);
 
@@ -14,27 +15,27 @@ class Stock extends StatefulWidget {
 class _StockState extends State<Stock> {
   @override
   Widget build(BuildContext context) {
-    // Create a future to get the posts
-    return FutureBuilder<List<Post>>(
-      future: NetworkService().fetchPosts(0), // Get the posts
+    // Create a future to get the products
+    return FutureBuilder<List<Product>>(
+      future: NetworkService().getAllProduct(0), // Get the All Product
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          List<Post>? post = snapshot.data; // Get the posts
-          // Check if the posts is null
-          if (post == null || post.isEmpty) {
+          List<Product>? product = snapshot.data; // Get the posts
+          // Check if the product is null
+          if (product == null || product.isEmpty) {
             return Container(
               alignment: Alignment.topCenter,
               margin: const EdgeInsets.only(top: 22),
               child: const Text('No data'),
             );
           }
-          // the posts is not null
+          // the product is not null
           return RefreshIndicator(
             // Create a refresh indicator
             onRefresh: () async {
               setState(() {});
             },
-            child: _buildProductGridView(post), // Return the Product Grid View
+            child: _buildProductGridView(product), // Return the Product Grid View
           );
         }
         // If the posts is error
@@ -54,7 +55,7 @@ class _StockState extends State<Stock> {
   }
 
   // Create a method to build the Product Grid View
-  GridView _buildProductGridView(List<Post> post) {
+  GridView _buildProductGridView(List<Product> product) {
     return GridView.builder(
       padding: const EdgeInsets.only(left: 4, right: 4, top: 4, bottom: 50),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -65,10 +66,10 @@ class _StockState extends State<Stock> {
       ),
       itemBuilder: (context, index) => LayoutBuilder(
         builder: (context, BoxConstraints constraints) {
-          return ProductItem(constraints.maxHeight);
+          return ProductItem(constraints.maxHeight, product: product[index]);
         },
       ),
-      itemCount: post.length, // จำนวน item ตาม post
+      itemCount: product.length, // จำนวน item ตาม product
     );
   }
 }
