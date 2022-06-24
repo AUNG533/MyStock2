@@ -1,3 +1,4 @@
+// network_service.dart
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
@@ -15,12 +16,36 @@ class NetworkService {
   factory NetworkService() => _instance;
 
   // Create a Dio instance
-  static final _dio = Dio();
+  static final _dio = Dio()
+    ..interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          // Do something before request is sent
+          options.baseUrl = API.baseURL; // Set the base URL
+          print(options.baseUrl + options.path);
+          // Set the timeout
+          options.connectTimeout= 5000;
+          options.receiveTimeout = 3000;
+
+          return handler.next(options); //continue
+        },
+        onResponse: (response, handler) {
+          // Do something with response data
+          return handler.next(response); // continue
+        },
+        onError: (DioError e, handler) async {
+          // Do something with response error
+          return handler.next(e); //continue
+          // If you want to resolve the request with some custom data，
+          // you can resolve a `Response` object eg: `handler.resolve(response)`.
+        },
+      ),
+    );
 
   // Create a method to get the products
   Future<List<Product>> getAllProduct(int startIndex, {int? limit = 10}) async {
     // get URL from API
-    const url = '${API.baseURL}${API.productURL}';
+    const url = API.productURL; // path: /products
     final response = await _dio.get(url); // Get the response
     // Check if the response is successful
     if (response.statusCode == 200) {

@@ -1,4 +1,5 @@
 // stock.dart
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:my_stock/src/models/product.dart';
 import 'package:my_stock/src/pages/home/widgets/product_item.dart';
@@ -43,7 +44,7 @@ class _StockState extends State<Stock> {
           return Container(
             alignment: Alignment.topCenter,
             margin: const EdgeInsets.only(top: 22),
-            child: Text('${snapshot.error}'),
+            child: Text((snapshot.error as DioError).message), // Show the error message
           ); // Return the error
         }
         // If the posts is loading or not loaded

@@ -35,7 +35,6 @@ class ProductItem extends StatelessWidget {
 
   Stack _buildImage() {
     final height = maxHeight * 0.7; // ความสูงของรูปภาพ
-    // final stock = 10; // จำลอง จำนวนสินค้า แต่ละรายการ
     final productImage = product.image; // รับค่ารูปภาพจาก Class Product
     return Stack(
       children: [
@@ -86,7 +85,7 @@ class ProductItem extends StatelessWidget {
                     ),
                   ), // จำนวนสินค้า
                 ],
-              )
+              ),
             ],
           ),
         ),
