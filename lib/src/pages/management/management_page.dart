@@ -1,6 +1,7 @@
 // management_page.dart
 import 'package:flutter/material.dart';
 import 'package:my_stock/src/models/product.dart';
+import 'package:my_stock/src/pages/management/product_image.dart';
 
 class ManagementPage extends StatefulWidget {
   const ManagementPage({Key? key}) : super(key: key);
@@ -42,6 +43,7 @@ class _ManagementPageState extends State<ManagementPage> {
                   Flexible(child: _buildStockInput()), // ช่องกรอกจำนวนสินค้า
                 ],
               ),
+              const ProductImage() // ช่องใส่รูปภาพสินค้า
             ],
           ),
         ),
