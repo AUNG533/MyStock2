@@ -1,9 +1,11 @@
 // stock.dart
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_stock/src/models/product.dart';
 import 'package:my_stock/src/pages/home/widgets/product_item.dart';
 import 'package:my_stock/src/service/network_service.dart';
+import 'package:my_stock/src/config/route.dart' as custom_route;
 
 // convert StatelessWidget to StatefulWidget
 class Stock extends StatefulWidget {
@@ -16,7 +18,20 @@ class Stock extends StatefulWidget {
 class _StockState extends State<Stock> {
   @override
   Widget build(BuildContext context) {
-    // Create a future to get the products
+    return Scaffold(
+      body: buildNetwork(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // ไปหน้า management สำหรับ เพิ่ม-แก่ไช-ลบ สินค้า
+          Navigator.pushNamed(context, custom_route.Route.management);
+        },
+        child: const FaIcon(FontAwesomeIcons.plus),
+      ),
+    );
+  }
+
+  // Create a future to get the products from the server
+  FutureBuilder<List<Product>> buildNetwork() {
     return FutureBuilder<List<Product>>(
       future: NetworkService().getAllProduct(0), // Get the All Product
       builder: (context, snapshot) {
@@ -36,7 +51,8 @@ class _StockState extends State<Stock> {
             onRefresh: () async {
               setState(() {});
             },
-            child: _buildProductGridView(product), // Return the Product Grid View
+            child: _buildProductGridView(
+                product), // Return the Product Grid View
           );
         }
         // If the posts is error
@@ -44,7 +60,8 @@ class _StockState extends State<Stock> {
           return Container(
             alignment: Alignment.topCenter,
             margin: const EdgeInsets.only(top: 22),
-            child: Text((snapshot.error as DioError).message), // Show the error message
+            child: Text((snapshot.error as DioError)
+                .message), // Show the error message
           ); // Return the error
         }
         // If the posts is loading or not loaded
