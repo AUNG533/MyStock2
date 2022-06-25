@@ -1,5 +1,5 @@
 // ignore_for_file: prefer_const_constructors
-// route.dart
+// lib/src/config/route.dart
 import 'package:flutter/material.dart';
 import 'package:my_stock/src/pages/pages.dart'; // รับ path ทังหมดมาจาก pages.dart
 

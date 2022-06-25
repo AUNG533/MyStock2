@@ -22,7 +22,7 @@ class _StockState extends State<Stock> {
       body: buildNetwork(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // ไปหน้า management สำหรับ เพิ่ม-แก่ไช-ลบ สินค้า
+          // ไปหน้า management สำหรับ เพิ่ม-แก่ไข-ลบ สินค้า
           Navigator.pushNamed(context, custom_route.Route.management);
         },
         child: const FaIcon(FontAwesomeIcons.plus),
