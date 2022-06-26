@@ -7,6 +7,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ProductImage extends StatefulWidget {
@@ -129,57 +130,86 @@ class _ProductImageState extends State<ProductImage> {
     )
         .then((file) {
       if (file != null) {
+        _cropImage(file.path); // Crop the image
+      }
+    });
+  }
+
+  // Crop the image
+  void _cropImage(String file) {
+    ImageCropper().cropImage(
+      sourcePath: file,
+      aspectRatioPresets: [
+        CropAspectRatioPreset.square,
+        CropAspectRatioPreset.ratio3x2,
+        CropAspectRatioPreset.original,
+        CropAspectRatioPreset.ratio4x3,
+        CropAspectRatioPreset.ratio16x9
+      ],
+      uiSettings: [
+        AndroidUiSettings(
+          toolbarTitle: 'Cropper',
+          toolbarColor: Colors.deepOrange,
+          toolbarWidgetColor: Colors.white,
+          initAspectRatio: CropAspectRatioPreset.original,
+          lockAspectRatio: false,
+        ),
+        IOSUiSettings(
+          title: 'Cropper',
+        ),
+      ],
+    ).then((file) {
+      if (file != null) {
         setState(() {
-          _imageFile = File(file.path);
+          _imageFile = File(file.path); // Set the image file
         });
       }
     });
   }
 }
 
-  // วิธีเขียน อีกรูปแบบหนึ่ง
-/*
-  void _modalPickImage() {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => SizedBox(
-        height: 200,
-        child: Column(
-          children: [
-            ListTile(
-              leading: const Icon(Icons.photo_camera),
-              title: const Text('Take a photo'),
-              onTap: () async {
-                final pickedFile = await _picker.getImage(
-                  source: ImageSource.camera,
-                  imageQuality: 50,
-                );
-                setState(() {
-                  _imageFile = File(pickedFile!.path);
-                });
-                if (!mounted) return;
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.photo_library),
-              title: const Text('Choose from gallery'),
-              onTap: () async {
-                final pickedFile = await _picker.getImage(
-                  source: ImageSource.gallery,
-                  imageQuality: 50,
-                );
-                setState(() {
-                  _imageFile = File(pickedFile!.path);
-                });
-                if (!mounted) return;
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-  */
-
+// วิธีใช้ image_picker อีกรูปแบบหนึ่ง
+//
+//   void _modalPickImage() {
+//     showModalBottomSheet(
+//       context: context,
+//       builder: (context) => SizedBox(
+//         height: 200,
+//         child: Column(
+//           children: [
+//             ListTile(
+//               leading: const Icon(Icons.photo_camera),
+//               title: const Text('Take a photo'),
+//               onTap: () async {
+//                 final pickedFile = await _picker.getImage(
+//                   source: ImageSource.camera,
+//                   imageQuality: 50,
+//                 );
+//                 setState(() {
+//                   _imageFile = File(pickedFile!.path);
+//                 });
+//                 if (!mounted) return;
+//                 Navigator.pop(context);
+//               },
+//             ),
+//             ListTile(
+//               leading: const Icon(Icons.photo_library),
+//               title: const Text('Choose from gallery'),
+//               onTap: () async {
+//                 final pickedFile = await _picker.getImage(
+//                   source: ImageSource.gallery,
+//                   imageQuality: 50,
+//                 );
+//                 setState(() {
+//                   _imageFile = File(pickedFile!.path);
+//                 });
+//                 if (!mounted) return;
+//                 Navigator.pop(context);
+//               },
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
