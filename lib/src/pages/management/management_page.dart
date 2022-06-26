@@ -62,9 +62,6 @@ class _ManagementPageState extends State<ManagementPage> {
           textColor: Colors.white,
           onPressed: () {
             _formKey.currentState!.save(); // Save the data
-            print(_product!.name);
-            print(_product!.price.toString());
-            print(_product!.stock.toString());
           },
           child: const Text('submit'),
         )

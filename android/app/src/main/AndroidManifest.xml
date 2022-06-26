@@ -3,6 +3,7 @@
     package="com.example.my_stock">
     <uses-permission android:name="android.permission.INTERNET" />
    <application
+       android:requestLegacyExternalStorage="true"
        android:usesCleartextTraffic="true"
        android:label="my_stock"
         android:name="${applicationName}"

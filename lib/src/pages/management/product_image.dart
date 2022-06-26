@@ -1,7 +1,13 @@
+// lib/src/pages/management/product_image.dart
+// ignore_for_file: prefer_function_declarations_over_variables
+
+// ignore_for_file: unused_local_variable
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProductImage extends StatefulWidget {
   const ProductImage({Key? key}) : super(key: key);
@@ -12,6 +18,7 @@ class ProductImage extends StatefulWidget {
 
 class _ProductImageState extends State<ProductImage> {
   File? _imageFile; // for the image file
+  final _picker = ImagePicker(); // for the image picker
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +37,7 @@ class _ProductImageState extends State<ProductImage> {
   // Build the image picker
   _buildPickerImage() => OutlinedButton.icon(
         onPressed: () {
-          // todo
+          _modalPickImage(); // เปิดหน้าต่างสำหรับเลือกรูปภาพ
         },
         label: const Text('Image'),
         icon: const FaIcon(
@@ -54,19 +61,125 @@ class _ProductImageState extends State<ProductImage> {
     }
     return Stack(
       children: [
-        container(Image.file(_imageFile!)),
+        container(Image.file(_imageFile!)), // รูปภาพที่แสดงผล
         _buildDeleteImageButton(), // ปุ่มลบรูปภาพ
       ],
     );
   }
+
   // Clear the image file
   Positioned _buildDeleteImageButton() => Positioned(
-        right: 0,
+        right: 0, // ให้อยู่มุมขวาบน
         child: IconButton(
           onPressed: () {
-            // todo
+            setState(() {
+              _imageFile = null; // ลบรูปภาพ
+            });
           },
-          icon: const Icon(Icons.clear),
+          icon: const Icon(
+            Icons.clear,
+            color: Colors.black54,
+          ),
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
         ),
       );
+
+  void _modalPickImage() {
+    // เปิดหน้าต่างสำหรับเลือกรูปภาพ
+    final buildListTile =
+        (String title, IconData icon, ImageSource imageSource) => ListTile(
+              leading: Icon(icon),
+              title: Text(title),
+              onTap: () async {
+                Navigator.pop(context); // Close the modal
+                _pickImage(imageSource); // Pick the image
+              },
+            );
+
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // เลือกรูปภาพจากกล้อง
+          buildListTile(
+            'Take a picture from camera',
+            Icons.camera_alt,
+            ImageSource.camera,
+          ),
+          // เลือกรูปภาพจากคลังรูปภาพ
+          buildListTile(
+            'Choose from photo library',
+            Icons.photo_library,
+            ImageSource.gallery,
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Pick the image
+  void _pickImage(ImageSource imageSource) {
+    _picker
+        .getImage(
+      source: imageSource,
+      maxWidth: 800,
+      maxHeight: 800,
+    )
+        .then((file) {
+      if (file != null) {
+        setState(() {
+          _imageFile = File(file.path);
+        });
+      }
+    });
+  }
 }
+
+  // วิธีเขียน อีกรูปแบบหนึ่ง
+/*
+  void _modalPickImage() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => SizedBox(
+        height: 200,
+        child: Column(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.photo_camera),
+              title: const Text('Take a photo'),
+              onTap: () async {
+                final pickedFile = await _picker.getImage(
+                  source: ImageSource.camera,
+                  imageQuality: 50,
+                );
+                setState(() {
+                  _imageFile = File(pickedFile!.path);
+                });
+                if (!mounted) return;
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_library),
+              title: const Text('Choose from gallery'),
+              onTap: () async {
+                final pickedFile = await _picker.getImage(
+                  source: ImageSource.gallery,
+                  imageQuality: 50,
+                );
+                setState(() {
+                  _imageFile = File(pickedFile!.path);
+                });
+                if (!mounted) return;
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  */
+
