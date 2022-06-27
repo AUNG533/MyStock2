@@ -23,7 +23,10 @@ class _StockState extends State<Stock> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // ไปหน้า management สำหรับ เพิ่ม-แก่ไข-ลบ สินค้า
-          Navigator.pushNamed(context, custom_route.Route.management);
+          Navigator.pushNamed(context, custom_route.Route.management)
+              .then((value) {
+            setState(() {}); // อัพเดทหน้าจอใหม่
+          });
         },
         child: const FaIcon(FontAwesomeIcons.plus),
       ),
@@ -51,8 +54,8 @@ class _StockState extends State<Stock> {
             onRefresh: () async {
               setState(() {});
             },
-            child: _buildProductGridView(
-                product), // Return the Product Grid View
+            child:
+                _buildProductGridView(product), // Return the Product Grid View
           );
         }
         // If the posts is error
@@ -60,8 +63,8 @@ class _StockState extends State<Stock> {
           return Container(
             alignment: Alignment.topCenter,
             margin: const EdgeInsets.only(top: 22),
-            child: Text((snapshot.error as DioError)
-                .message), // Show the error message
+            child: Text(
+                (snapshot.error as DioError).message), // Show the error message
           ); // Return the error
         }
         // If the posts is loading or not loaded

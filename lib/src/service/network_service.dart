@@ -1,10 +1,13 @@
 // network_service.dart
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:my_stock/src/constants/api.dart';
 import 'package:my_stock/src/models/post.dart';
 import 'package:my_stock/src/models/product.dart';
+// ignore: depend_on_referenced_packages
+import 'package:http_parser/http_parser.dart';
 
 class NetworkService {
   NetworkService._internal();
@@ -24,7 +27,7 @@ class NetworkService {
           options.baseUrl = API.baseURL; // Set the base URL
           print(options.baseUrl + options.path);
           // Set the timeout
-          options.connectTimeout= 5000;
+          options.connectTimeout = 5000;
           options.receiveTimeout = 3000;
 
           return handler.next(options); //continue
@@ -46,10 +49,37 @@ class NetworkService {
   Future<List<Product>> getAllProduct(int startIndex, {int? limit = 10}) async {
     // get URL from API
     const url = API.productURL; // path: /products
-    final response = await _dio.get(url); // Get the response
+    final response = await _dio.get(url); // Get the response from the server
     // Check if the response is successful
     if (response.statusCode == 200) {
       return productFromJson(jsonEncode(response.data)); // Return the products
+    }
+    throw Exception(
+        'Network failed'); // Throw an error if the response is not successful
+  }
+
+  // Create a method add a product
+  Future<String> addProduct(Product product, {File? imageFile}) async {
+    // get URL from API
+    const url = API.productURL; // path: /products
+
+    // Create a FormData object to send the data
+    FormData data = FormData.fromMap(
+      {
+        "name": product.name,
+        "price": product.price,
+        'stock': product.stock,
+        if (imageFile != null)
+          "photo": await MultipartFile.fromFile(imageFile.path,
+              contentType: MediaType("image", "jpg")),
+      },
+    );
+
+    final response =
+        await _dio.post(url, data: data); // post the data to the server
+    // Check if the response is successful
+    if (response.statusCode == 201) {
+      return 'Add Successfully'; // show the message
     }
     throw Exception(
         'Network failed'); // Throw an error if the response is not successful

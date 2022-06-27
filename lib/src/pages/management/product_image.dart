@@ -11,7 +11,8 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ProductImage extends StatefulWidget {
-  const ProductImage({Key? key}) : super(key: key);
+  final Function(File imageFile) callBack; // ฟังก์ชั่นสำหรับรูปภาพ
+  const ProductImage( this.callBack, {Key? key}) : super(key: key);
 
   @override
   State<ProductImage> createState() => _ProductImageState();
@@ -162,6 +163,7 @@ class _ProductImageState extends State<ProductImage> {
       if (file != null) {
         setState(() {
           _imageFile = File(file.path); // Set the image file
+          widget.callBack(_imageFile!); // Call the callback
         });
       }
     });
