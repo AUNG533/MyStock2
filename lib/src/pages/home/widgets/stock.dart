@@ -76,7 +76,7 @@ class _StockState extends State<Stock> {
   }
 
   // Create a method to build the Product Grid View
-  GridView _buildProductGridView(List<Product> product) {
+  GridView _buildProductGridView(List<Product> products) {
     return GridView.builder(
       padding: const EdgeInsets.only(left: 4, right: 4, top: 4, bottom: 50),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -87,10 +87,23 @@ class _StockState extends State<Stock> {
       ),
       itemBuilder: (context, index) => LayoutBuilder(
         builder: (context, BoxConstraints constraints) {
-          return ProductItem(constraints.maxHeight, product: product[index]);
+          final product = products[index]; // Get the product
+          return ProductItem(
+            constraints.maxHeight,
+            product: product,
+            onTap: () {
+              Navigator.pushNamed(
+                context,
+                custom_route.Route.management,
+                arguments: product,
+              ).then((value) {
+                setState(() {}); // อัพเดทหน้าจอใหม่
+              });
+            },
+          );
         },
       ),
-      itemCount: product.length, // จำนวน item ตาม product
+      itemCount: products.length, // จำนวน item ตาม product
     );
   }
 }

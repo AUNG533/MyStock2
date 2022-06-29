@@ -9,10 +9,14 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:my_stock/src/constants/api.dart';
 
 class ProductImage extends StatefulWidget {
   final Function(File imageFile) callBack; // ฟังก์ชั่นสำหรับรูปภาพ
-  const ProductImage( this.callBack, {Key? key}) : super(key: key);
+  final String imageURL; // รูปภาพสินค้า
+
+  const ProductImage(this.callBack, this.imageURL, {Key? key})
+      : super(key: key);
 
   @override
   State<ProductImage> createState() => _ProductImageState();
@@ -21,6 +25,21 @@ class ProductImage extends StatefulWidget {
 class _ProductImageState extends State<ProductImage> {
   File? _imageFile; // for the image file
   final _picker = ImagePicker(); // for the image picker
+  String? _imageURL; // for the image url
+
+  // Initialize the state
+  @override
+  void initState() {
+    _imageURL = widget.imageURL;
+    super.initState();
+  }
+
+  // dispose the state
+  @override
+  void dispose() {
+    _imageFile?.delete();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +67,7 @@ class _ProductImageState extends State<ProductImage> {
       );
 
   dynamic _buildPreviewImage() {
-    // ignore: prefer_function_declarations_over_variables
+
     final container = (Widget child) => Container(
           color: Colors.grey[100],
           margin: const EdgeInsets.only(top: 4),
@@ -58,15 +77,20 @@ class _ProductImageState extends State<ProductImage> {
         );
 
     // Check image file
-    if (_imageFile == null) {
+    if ((_imageURL == null || _imageURL!.isEmpty) && _imageFile == null) {
       return const SizedBox();
     }
-    return Stack(
-      children: [
-        container(Image.file(_imageFile!)), // รูปภาพที่แสดงผล
-        _buildDeleteImageButton(), // ปุ่มลบรูปภาพ
-      ],
-    );
+
+    return _imageURL != null
+        ? container(
+            Image.network('${API.imageURL}/$_imageURL'),
+          )
+        : Stack(
+            children: [
+              container(Image.file(_imageFile!)), // รูปภาพที่แสดงผล
+              _buildDeleteImageButton(), // ปุ่มลบรูปภาพ
+            ],
+          );
   }
 
   // Clear the image file
@@ -76,6 +100,7 @@ class _ProductImageState extends State<ProductImage> {
           onPressed: () {
             setState(() {
               _imageFile = null; // ลบรูปภาพ
+              // widget.callBack(_imageFile!); // ส่งค่าว่ารูปภาพถูกลบไปแล้ว
             });
           },
           icon: const Icon(
@@ -98,7 +123,6 @@ class _ProductImageState extends State<ProductImage> {
                 _pickImage(imageSource); // Pick the image
               },
             );
-
     showModalBottomSheet(
       context: context,
       builder: (context) => Column(
@@ -164,6 +188,7 @@ class _ProductImageState extends State<ProductImage> {
         setState(() {
           _imageFile = File(file.path); // Set the image file
           widget.callBack(_imageFile!); // Call the callback
+          _imageURL = null; // Reset the image URL
         });
       }
     });

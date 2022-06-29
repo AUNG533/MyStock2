@@ -58,7 +58,7 @@ class NetworkService {
         'Network failed'); // Throw an error if the response is not successful
   }
 
-  // Create a method add a product
+  // Create a method add product
   Future<String> addProduct(Product product, {File? imageFile}) async {
     // get URL from API
     const url = API.productURL; // path: /products
@@ -80,6 +80,48 @@ class NetworkService {
     // Check if the response is successful
     if (response.statusCode == 201) {
       return 'Add Successfully'; // show the message
+    }
+    throw Exception(
+        'Network failed'); // Throw an error if the response is not successful
+  }
+
+  // Create a method Edit product
+  Future<String> editProduct(Product product, {File? imageFile}) async {
+    // get URL from API
+    final url = '${API.productURL}/${product.id}'; // path: /products
+
+    // Create a FormData object to send the data
+    FormData data = FormData.fromMap(
+      {
+        "name": product.name,
+        "price": product.price,
+        'stock': product.stock,
+        if (imageFile != null)
+          "photo": await MultipartFile.fromFile(imageFile.path,
+              contentType: MediaType("image", "jpg")),
+      },
+    );
+
+    final response =
+    await _dio.put(url, data: data); // post the data to the server
+    // Check if the response is successful
+    if (response.statusCode == 200) {
+      return 'Edit Successfully'; // show the message
+    }
+    throw Exception(
+        'Network failed'); // Throw an error if the response is not successful
+  }
+
+  // Create a method Delete product
+  Future<String> deleteProduct(int productId) async {
+    // get URL from API
+    final url = '${API.productURL}/$productId'; // path: /products
+
+    final response =
+    await _dio.delete(url); // post the data to the server
+    // Check if the response is successful
+    if (response.statusCode == 204) {
+      return 'Delete Successfully'; // show the message
     }
     throw Exception(
         'Network failed'); // Throw an error if the response is not successful

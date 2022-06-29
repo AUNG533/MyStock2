@@ -10,18 +10,18 @@ String productToJson(List<Product> data) => json.encode(List<dynamic>.from(data.
 // Constructor
 class Product {
   Product({
-    this.id,
+    required this.id,
     this.name,
-    this.image,
+    required this.image,
     this.stock,
     this.price,
     this.createdAt,
     this.updatedAt,
   });
   // Variables
-  int? id;
+  int id;
   String? name;
-  String? image;
+  String image;
   int? stock;
   int? price;
   DateTime? createdAt;

@@ -10,17 +10,18 @@ import 'package:my_stock/src/widgets/image_not_found.dart';
 class ProductItem extends StatelessWidget {
   // อัตาราส่วน LayoutBuilder - constraints.maxHeight / ส่งค่ามาจากฟังก์ชันของคลาส Stock
   final double maxHeight; // 100 % childAspectRatio/อัตราส่วน item
-
   final Product product; // ดึ่วค่า Class Product
+  final VoidCallback? onTap; // คลาสที่จะทำงานหลังจากกดปุ่มของสินค้า
 
-  const ProductItem(this.maxHeight, {Key? key, required this.product}) : super(key: key);
+  const ProductItem(this.maxHeight,
+      {Key? key, required this.product, this.onTap})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        print('ProductItem');
-      },
+      // รับค่า onTap มาจาก stock.dart/_buildProductGridView/LayoutBuilder/ProductItem
+      onTap: onTap,
       child: Container(
         color: Colors.white,
         child: Column(
@@ -42,7 +43,8 @@ class ProductItem extends StatelessWidget {
           width: double.infinity,
           height: height,
           child: productImage != null && productImage.isNotEmpty // ถ้ามีรูปภาพ
-              ? Image.network('${API.imageURL}/$productImage') // แสดงรูปภาพจาก server
+              ? Image.network(
+                  '${API.imageURL}/$productImage') // แสดงรูปภาพจาก server
               : ImageNotFound(), // ถ้าไม่มีรูปภาพ แสดงสิ่งนี้
         ),
         // Check if the stock is 0 Show the OutOfStock
@@ -60,7 +62,8 @@ class ProductItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // ชื่อสินค้า
-              Text(product.name!,
+              Text(
+                product.name!,
                 maxLines: 2,
                 overflow: TextOverflow
                     .ellipsis, // ตัดคำออกจากตัวอักษรที่เกิน / แสดง ...
